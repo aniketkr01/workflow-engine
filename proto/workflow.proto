@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package workflow.v1;
+
+option go_package = "github.com/aniketkr01/workflow-engine/proto/workflowpb";
+
+// WorkflowService provides internal gRPC communication for workflow operations.
+service WorkflowService {
+  rpc TriggerWorkflow(TriggerWorkflowRequest) returns (TriggerWorkflowResponse);
+  rpc GetExecutionStatus(GetExecutionStatusRequest) returns (GetExecutionStatusResponse);
+  rpc CancelExecution(CancelExecutionRequest) returns (CancelExecutionResponse);
+  rpc StreamExecutionEvents(StreamExecutionEventsRequest) returns (stream ExecutionEvent);
+}
+
+message TriggerWorkflowRequest {
+  string workflow_id = 1;
+}
+
+message TriggerWorkflowResponse {
+  string execution_id = 1;
+  string status = 2;
+}
+
+message GetExecutionStatusRequest {
+  string execution_id = 1;
+}
+
+message GetExecutionStatusResponse {
+  string execution_id = 1;
+  string workflow_id = 2;
+  string status = 3;
+  string started_at = 4;
+  string finished_at = 5;
+  repeated TaskStatus tasks = 6;
+}
+
+message TaskStatus {
+  string task_execution_id = 1;
+  string task_def_id = 2;
+  string task_name = 3;
+  string status = 4;
+  int32 attempt = 5;
+  string error = 6;
+}
+
+message CancelExecutionRequest {
+  string execution_id = 1;
+}
+
+message CancelExecutionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message StreamExecutionEventsRequest {
+  string execution_id = 1;
+}
+
+message ExecutionEvent {
+  string execution_id = 1;
+  string event_type = 2;   // "task_started" | "task_completed" | "task_failed" | "workflow_completed"
+  string task_def_id = 3;
+  string status = 4;
+  string timestamp = 5;
+  string message = 6;
+}
