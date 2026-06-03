@@ -40,8 +40,6 @@ A production-grade distributed workflow orchestration engine built in Go. Define
 
 ## Architecture
 
-## Architecture
-
 ```mermaid
 flowchart LR
     Client[Client / User] -->|REST / gRPC| API[API Service]
@@ -548,7 +546,8 @@ Distributed traces are sent via OpenTelemetry to Jaeger. View traces at http://l
 │   ├── repository/
 │   │   ├── interfaces.go   # Repository interfaces
 │   │   └── postgres/       # PostgreSQL implementations
-│   ├── telemetry/      # Uber Zap logger, Prometheus metrics, OpenTelemetry tracing
+│   ├── logger/         # Uber Zap logger
+│   ├── telemetry/      # Prometheus metrics, OpenTelemetry tracing
 │   └── worker/         # Worker pool (semaphore-based concurrency, task execution)
 ├── migrations/
 │   └── 001_init.sql    # Database schema (auto-applied by Docker Compose)
