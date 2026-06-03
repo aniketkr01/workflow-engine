@@ -29,7 +29,7 @@ A production-grade distributed workflow orchestration engine built in Go. Define
 - **Idempotent dispatch** — Tasks carry idempotency keys so duplicate dispatches are safely ignored.
 - **REST + gRPC APIs** — HTTP API for user-facing operations; gRPC for internal/programmatic access.
 - **JWT authentication** — Stateless auth with role-based access control (admin, operator, viewer).
-- **Full observability** — Structured logging (zerolog), Prometheus metrics, and OpenTelemetry distributed tracing (Jaeger).
+- **Full observability** — Structured logging (Uber Zap), Prometheus metrics, and OpenTelemetry distributed tracing (Jaeger).
 - **Graceful shutdown** — In-flight tasks finish before the process exits.
 
 ---
@@ -89,7 +89,7 @@ A production-grade distributed workflow orchestration engine built in Go. Define
 | Database | PostgreSQL 16 (pgx/v5, JSONB for workflow definitions) |
 | Message queue | Redis 7 Streams |
 | Auth | JWT (golang-jwt/jwt v5), bcrypt |
-| Logging | [zerolog](https://github.com/rs/zerolog) |
+| Logging | [Uber Zap](https://github.com/uber-go/zap) |
 | Metrics | [Prometheus](https://prometheus.io/) + Grafana |
 | Tracing | OpenTelemetry → Jaeger |
 | Containers | Docker + Docker Compose |
@@ -465,7 +465,7 @@ The worker resolves the MCP client from the registry, strips the `__`-prefixed k
 
 ### Logs
 
-Structured JSON logs via zerolog. In development (`ENVIRONMENT=development`) logs are pretty-printed. Example:
+Structured JSON logs via Uber Zap. In development (`ENVIRONMENT=development`) logs are pretty-printed. Example:
 
 ```json
 {"level":"info","service":"workflow-engine","time":"2024-01-15T10:00:00Z","port":"8080","message":"HTTP server starting"}
@@ -525,7 +525,7 @@ Distributed traces are sent via OpenTelemetry to Jaeger. View traces at http://l
 │   ├── repository/
 │   │   ├── interfaces.go   # Repository interfaces
 │   │   └── postgres/       # PostgreSQL implementations
-│   ├── telemetry/      # Zerolog logger, Prometheus metrics, OpenTelemetry tracing
+│   ├── telemetry/      # Uber Zap logger, Prometheus metrics, OpenTelemetry tracing
 │   └── worker/         # Worker pool (semaphore-based concurrency, task execution)
 ├── migrations/
 │   └── 001_init.sql    # Database schema (auto-applied by Docker Compose)
