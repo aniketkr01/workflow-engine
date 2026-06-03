@@ -1,5 +1,9 @@
 # Workflow Engine
 
+<div align="center">
+<img width="724" height="543" alt="workflow-engine-logo" src="https://github.com/user-attachments/assets/efadd963-3fcd-484a-815d-758fb1f3ce16" />
+</div>
+
 A production-grade distributed workflow orchestration engine built in Go. Define workflows as DAGs (Directed Acyclic Graphs), execute tasks across a scalable worker pool, integrate with MCP (Model Context Protocol) tools, and observe everything in real-time.
 
 ## Table of Contents
