@@ -40,36 +40,55 @@ A production-grade distributed workflow orchestration engine built in Go. Define
 
 ## Architecture
 
-```
-┌─────────────┐     REST/gRPC      ┌───────────────────────────┐
-│   Client    │ ────────────────── │        API Service         │
-└─────────────┘                    │  ┌─────────────────────┐  │
-                                   │  │    Orchestrator      │  │
-                                   │  │  (DAG + dispatch)    │  │
-                                   │  └──────────┬──────────┘  │
-                                   └─────────────┼─────────────┘
-                                                 │ enqueue
-                                    ┌────────────▼────────────┐
-                                    │    Redis Streams         │
-                                    │  (task queue + DLQ)      │
-                                    └────────────┬────────────┘
-                                                 │ consume
-                              ┌──────────────────┼──────────────────┐
-                              │                  │                  │
-                    ┌─────────▼────┐   ┌─────────▼────┐            │
-                    │   Worker 1   │   │   Worker 2   │  ...        │
-                    │  (pool × N)  │   │  (pool × N)  │            │
-                    └─────────┬────┘   └─────────┬────┘            │
-                              │                  │                  │
-                    ┌─────────▼──────────────────▼────┐            │
-                    │          PostgreSQL               │            │
-                    │  users / workflows / executions  │            │
-                    └──────────────────────────────────┘            │
-                                                                     │
-                    ┌────────────────────────────────────────────────┘
-                    │  MCP Servers (registered via API)
-                    │  Workers call tools via HTTP/stdio transport
-                    └────────────────────────────────────────────────
+## Architecture
+
+```mermaid
+flowchart LR
+    Client[Client / User] -->|REST / gRPC| API[API Service]
+
+    API --> Auth[JWT Auth + RBAC]
+    API --> Orchestrator[Workflow Orchestrator]
+
+    Orchestrator --> DAG[DAG Validation<br/>Cycle Detection<br/>Topological Sort]
+    Orchestrator --> Scheduler[Task Scheduler]
+    Scheduler -->|Enqueue ready tasks| Redis[(Redis Streams<br/>Task Queue)]
+    Redis --> DLQ[(Dead Letter Queue)]
+
+    Redis -->|Consume tasks| WorkerPool[Distributed Worker Pool]
+
+    WorkerPool --> Worker1[Worker 1]
+    WorkerPool --> Worker2[Worker 2]
+    WorkerPool --> WorkerN[Worker N]
+
+    Worker1 --> Executor[Task Executor]
+    Worker2 --> Executor
+    WorkerN --> Executor
+
+    Executor -->|HTTP task| ExternalAPI[External HTTP APIs]
+    Executor -->|MCP tool task| MCP[MCP Tool Servers]
+    MCP --> MCPHTTP[HTTP Transport]
+    MCP --> MCPStdio[Stdio Transport]
+
+    API --> DB[(PostgreSQL)]
+    Orchestrator --> DB
+    WorkerPool --> DB
+
+    DB --> Users[Users]
+    DB --> Workflows[Workflows]
+    DB --> Executions[Workflow Executions]
+    DB --> Tasks[Task Executions]
+    DB --> MCPRegistry[MCP Server Registry]
+
+    API --> Logs[Structured Logs<br/>Uber Zap]
+    WorkerPool --> Logs
+
+    API --> Metrics[Prometheus Metrics]
+    WorkerPool --> Metrics
+
+    API --> Traces[OpenTelemetry Traces<br/>Jaeger]
+    WorkerPool --> Traces
+
+    Metrics --> Grafana[Grafana Dashboards]
 ```
 
 ### Execution Flow
