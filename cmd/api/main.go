@@ -120,7 +120,7 @@ func main() {
 	router := api.NewRouter(authHandler, workflowHandler, mcpHandler, jwtManager, metrics)
 
 	httpServer := &http.Server{
-		Addr:         ":" + cfg.Server.HTTPPort,
+		Addr:         "0.0.0.0:" + cfg.Server.HTTPPort,
 		Handler:      router,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
