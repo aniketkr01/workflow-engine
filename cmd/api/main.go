@@ -25,6 +25,7 @@ import (
 	"github.com/aniketkr01/workflow-engine/internal/queue"
 	"github.com/aniketkr01/workflow-engine/internal/repository/postgres"
 	"github.com/aniketkr01/workflow-engine/internal/telemetry"
+	"github.com/aniketkr01/workflow-engine/migrations"
 )
 
 func main() {
@@ -60,6 +61,11 @@ func main() {
 		logger.Fatal(ctx, "connect to database", zap.Error(err))
 	}
 	defer db.Close()
+
+	// Database Migrations.
+	if err := migrations.Run(ctx, db); err != nil {
+		logger.Fatal(ctx, "database migrations failed", zap.Error(err))
+	}
 
 	// Redis.
 	rdb := redis.NewClient(&redis.Options{

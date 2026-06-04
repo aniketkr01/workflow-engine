@@ -1,0 +1,8 @@
+.git
+bin
+docker-compose.yml
+README.md
+*.md
+*.log
+*.tmp
+*_test.go
