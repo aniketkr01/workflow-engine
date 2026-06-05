@@ -324,34 +324,6 @@ To verify formatting without modifying files:
 test -z "$(gofmt -l .)"
 ```
 
-### Build Locally
-
-Build the API service:
-
-```bash
-go build -o bin/api ./cmd/api
-```
-
-Build the worker service:
-
-```bash
-go build -o bin/worker ./cmd/worker
-```
-
-### Docker Build Validation
-
-Build the API Docker image:
-
-```bash
-docker build -f Dockerfile.api -t workflow-engine-api:test .
-```
-
-Build the worker Docker image:
-
-```bash
-docker build -f Dockerfile.worker -t workflow-engine-worker:test .
-```
-
 ### CI Pipeline
 
 GitHub Actions runs on every push and pull request to `main`.
