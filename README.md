@@ -79,9 +79,9 @@ flowchart LR
     API --> Auth[JWT Auth + RBAC]
     API --> Orchestrator[Workflow Orchestrator]
 
-    Orchestrator --> DAG[DAG Validation<br/>Cycle Detection<br/>Topological Sort]
+    Orchestrator --> DAG[DAG Validation\nCycle Detection\nTopological Sort]
     Orchestrator --> Scheduler[Task Scheduler]
-    Scheduler -->|Enqueue ready tasks| Redis[(Redis Streams<br/>Task Queue)]
+    Scheduler -->|Enqueue ready tasks| Redis[(Redis Streams\nTask Queue)]
     Redis --> DLQ[(Dead Letter Queue)]
 
     Redis -->|Consume tasks| WorkerPool[Distributed Worker Pool]
@@ -109,13 +109,13 @@ flowchart LR
     DB --> Tasks[Task Executions]
     DB --> MCPRegistry[MCP Server Registry]
 
-    API --> Logs[Structured Logs<br/>Uber Zap]
+    API --> Logs[Structured Logs\nUber Zap]
     WorkerPool --> Logs
 
     API --> Metrics[Prometheus Metrics]
     WorkerPool --> Metrics
 
-    API --> Traces[OpenTelemetry Traces<br/>Jaeger]
+    API --> Traces[OpenTelemetry Traces\nJaeger]
     WorkerPool --> Traces
 
     Metrics --> Grafana[Grafana Dashboards]
