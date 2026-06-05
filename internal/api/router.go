@@ -9,8 +9,8 @@ import (
 	"github.com/aniketkr01/workflow-engine/internal/domain"
 	"github.com/aniketkr01/workflow-engine/internal/telemetry"
 	"github.com/gin-gonic/gin"
-	otelgin "go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	otelgin "go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
 
 // NewRouter builds and returns the Gin router.

@@ -7,18 +7,18 @@ import (
 )
 
 type Config struct {
-	Server   ServerConfig
-	Database DatabaseConfig
-	Redis    RedisConfig
-	Auth     AuthConfig
-	Worker   WorkerConfig
+	Server    ServerConfig
+	Database  DatabaseConfig
+	Redis     RedisConfig
+	Auth      AuthConfig
+	Worker    WorkerConfig
 	Telemetry TelemetryConfig
 }
 
 type ServerConfig struct {
-	HTTPPort    string
-	GRPCPort    string
-	Environment string
+	HTTPPort        string
+	GRPCPort        string
+	Environment     string
 	ShutdownTimeout time.Duration
 }
 

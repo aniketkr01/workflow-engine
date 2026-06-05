@@ -59,9 +59,9 @@ type RetryPolicy struct {
 }
 
 type Schedule struct {
-	Type      ScheduleType `json:"type"`
-	RunAt     *time.Time   `json:"run_at,omitempty"`  // for delayed
-	CronExpr  string       `json:"cron_expr,omitempty"` // for recurring
+	Type     ScheduleType `json:"type"`
+	RunAt    *time.Time   `json:"run_at,omitempty"`    // for delayed
+	CronExpr string       `json:"cron_expr,omitempty"` // for recurring
 }
 
 // WorkflowExecution is a single run of a Workflow.

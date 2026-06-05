@@ -10,9 +10,9 @@ type Request struct {
 }
 
 type Response struct {
-	JSONRPC string `json:"jsonrpc"`
-	ID      int    `json:"id"`
-	Result  any    `json:"result,omitempty"`
+	JSONRPC string    `json:"jsonrpc"`
+	ID      int       `json:"id"`
+	Result  any       `json:"result,omitempty"`
 	Error   *RPCError `json:"error,omitempty"`
 }
 
@@ -35,8 +35,8 @@ type ClientInfo struct {
 }
 
 type InitializeResult struct {
-	ProtocolVersion string      `json:"protocolVersion"`
-	ServerInfo      ServerInfo  `json:"serverInfo"`
+	ProtocolVersion string       `json:"protocolVersion"`
+	ServerInfo      ServerInfo   `json:"serverInfo"`
 	Capabilities    Capabilities `json:"capabilities"`
 }
 

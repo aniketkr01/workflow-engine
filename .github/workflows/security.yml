@@ -73,13 +73,13 @@ jobs:
 
       - name: Install license checker
         run: |
-          go install github.com/google/licenseclassifier/v2@v2.0.0
+          go install github.com/google/licenseclassifier/v2/tools/identify_license@v2.0.0
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
       - name: Check licenses
         run: |
           go mod download
-          licenseclassifier version
+          identify_license LICENSE
           go list -m all | while read -r line; do
             echo "Checking: $line"
           done

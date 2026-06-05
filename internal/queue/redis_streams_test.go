@@ -29,12 +29,12 @@ func TestParseMessage(t *testing.T) {
 			},
 		},
 		{
-			name: "missing payload",
+			name:    "missing payload",
 			message: redis.XMessage{Values: map[string]interface{}{}},
 			wantErr: true,
 		},
 		{
-			name: "invalid json",
+			name:    "invalid json",
 			message: redis.XMessage{Values: map[string]interface{}{"payload": "not-json"}},
 			wantErr: true,
 		},
