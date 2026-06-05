@@ -155,8 +155,6 @@ func newStdioClient(command string) (*stdioClient, error) {
 }
 
 func (c *stdioClient) nextID() int {
-	c.mu.Lock()
-	defer c.mu.Unlock()
 	c.seq++
 	return c.seq
 }
@@ -167,11 +165,10 @@ func (c *stdioClient) call(ctx context.Context, method string, params any, resul
 
 	req := Request{
 		JSONRPC: "2.0",
-		ID:      c.seq + 1,
+		ID:      c.nextID(),
 		Method:  method,
 		Params:  params,
 	}
-	c.seq++
 
 	line, err := json.Marshal(req)
 	if err != nil {
