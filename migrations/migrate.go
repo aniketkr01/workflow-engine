@@ -15,7 +15,7 @@ import (
 //go:embed *.sql
 var sqlFiles embed.FS
 
-// Run executes all migration files in the embedded filesystem 
+// Run executes all migration files in the embedded filesystem
 // against the provided database connection pool.
 func Run(ctx context.Context, pool *pgxpool.Pool) error {
 	entries, err := fs.ReadDir(sqlFiles, ".")
@@ -50,7 +50,7 @@ func Run(ctx context.Context, pool *pgxpool.Pool) error {
 	return nil
 }
 
-// extractUpSection extracts the SQL statements from the "Up" 
+// extractUpSection extracts the SQL statements from the "Up"
 // section of a migration file, ignoring any "Down" section.
 func extractUpSection(content string) string {
 	const upMarker = "-- +migrate Up"
