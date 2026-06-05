@@ -21,10 +21,10 @@ jobs:
           go-version: '1.26.3'
 
       - name: Build Docker images
-        run: docker-compose build
+        run: docker compose build
 
       - name: Start services
-        run: docker-compose up -d
+        run: docker compose up -d
 
       - name: Wait for services to be ready
         run: |
@@ -45,8 +45,8 @@ jobs:
 
       - name: View logs on failure
         if: failure()
-        run: docker-compose logs
+        run: docker compose logs
 
       - name: Cleanup
         if: always()
-        run: docker-compose down
+        run: docker compose down
