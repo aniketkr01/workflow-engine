@@ -4,16 +4,27 @@
 <img width="724" height="543" alt="workflow-engine-logo" src="https://github.com/user-attachments/assets/efadd963-3fcd-484a-815d-758fb1f3ce16" />
 </div>
 
+<p align="center"> 
+    <img src="https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white" alt="Go" /> 
+    <img src="https://img.shields.io/badge/PostgreSQL-16-316192?logo=postgresql&logoColor=white" alt="PostgreSQL" /> 
+    <img src="https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white" alt="Redis" /> 
+    <img src="https://img.shields.io/badge/gRPC-enabled-244c5a?logo=google&logoColor=white" alt="gRPC" /> 
+    <img src="https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white" alt="Docker" /> 
+    <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
+</p>
+
 A production-grade distributed workflow orchestration engine built in Go. Define workflows as DAGs (Directed Acyclic Graphs), execute tasks across a scalable worker pool, integrate with MCP (Model Context Protocol) tools, and observe everything in real-time.
 
 ## Table of Contents
-
+- [Why Workflow Engine?](#why-workflow-engine)
 - [Features](#features)
+- [Real-world Use Cases](#real-world-use-cases)
 - [Architecture](#architecture)
 - [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
 - [Local Development](#local-development)
+- [Testing and CI](#testing-and-ci)
 - [Configuration](#configuration)
 - [API Reference](#api-reference)
 - [Workflow Definition](#workflow-definition)
@@ -21,6 +32,16 @@ A production-grade distributed workflow orchestration engine built in Go. Define
 - [Observability](#observability)
 - [Project Structure](#project-structure)
 - [Database Schema](#database-schema)
+
+---
+
+## Why Workflow Engine?
+
+Modern backend systems often need to coordinate multi-step jobs such as data processing, third-party API calls, report generation, notification delivery, and AI/tool-based automation.
+
+A simple background worker is not enough when tasks have dependencies, retries, failure handling, idempotency, observability, and distributed execution requirements.
+
+Workflow Engine is designed to solve this by providing a production-style orchestration layer where workflows are defined as DAGs and executed reliably across distributed workers.
 
 ---
 
@@ -35,6 +56,17 @@ A production-grade distributed workflow orchestration engine built in Go. Define
 - **JWT authentication** — Stateless auth with role-based access control (admin, operator, viewer).
 - **Full observability** — Structured logging (Uber Zap), Prometheus metrics, and OpenTelemetry distributed tracing (Jaeger).
 - **Graceful shutdown** — In-flight tasks finish before the process exits.
+
+---
+
+## Real-world Use Cases
+
+- Data pipeline orchestration: fetch, transform, validate, and store data.
+- AI/LLM automation: chain MCP tools for retrieval, summarization, enrichment, and report generation.
+- E-commerce operations: catalog sync, inventory validation, price updates, and notification workflows.
+- Internal developer platforms: define reusable backend workflows instead of writing custom orchestration logic repeatedly.
+- Reliable background processing: execute long-running jobs with retries, DLQ, idempotency, and observability.
+- Third-party API coordination: safely call external services with timeout, retry, and failure recovery.
 
 ---
 
@@ -239,6 +271,106 @@ go build -o bin/worker ./cmd/worker
 docker build -f Dockerfile.api -t workflow-engine-api .
 docker build -f Dockerfile.worker -t workflow-engine-worker .
 ```
+
+---
+
+## Testing and CI
+
+The project includes tests and GitHub Actions workflows to validate formatting, static checks, test execution, race detection, coverage generation, binary builds, and Docker image builds.
+
+### Run Tests Locally
+
+Run all tests:
+
+```bash
+go test ./...
+```
+
+Run tests with race detection:
+
+```bash
+go test ./... -race
+```
+
+Run tests with coverage:
+
+```bash
+go test ./... -coverprofile=coverage.out
+```
+
+View coverage in the browser:
+
+```bash
+go tool cover -html=coverage.out
+```
+
+### Static Checks
+
+Run `go vet`:
+
+```bash
+go vet ./...
+```
+
+Check formatting:
+
+```bash
+gofmt -w .
+```
+
+To verify formatting without modifying files:
+
+```bash
+test -z "$(gofmt -l .)"
+```
+
+### Build Locally
+
+Build the API service:
+
+```bash
+go build -o bin/api ./cmd/api
+```
+
+Build the worker service:
+
+```bash
+go build -o bin/worker ./cmd/worker
+```
+
+### Docker Build Validation
+
+Build the API Docker image:
+
+```bash
+docker build -f Dockerfile.api -t workflow-engine-api:test .
+```
+
+Build the worker Docker image:
+
+```bash
+docker build -f Dockerfile.worker -t workflow-engine-worker:test .
+```
+
+### CI Pipeline
+
+GitHub Actions runs on every push and pull request to `main`.
+
+The CI pipeline validates:
+
+- Go dependency installation
+- Code formatting
+- Static analysis using `go vet`
+- Unit tests
+- Race detection
+- Test coverage generation
+- API binary build
+- Worker binary build
+
+The Docker workflow validates:
+
+- API Docker image build
+- Worker Docker image build
 
 ---
 
