@@ -1,5 +1,12 @@
 name: Security Checks
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  security-events: write
+
 on:
   push:
     branches: [main, develop]
@@ -28,15 +35,12 @@ jobs:
           output: 'trivy-results.sarif'
 
       - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results.sarif'
 
   code-scanning:
     runs-on: ubuntu-latest
-    
-    permissions:
-      security-events: write
 
     steps:
       - uses: actions/checkout@v4
@@ -52,7 +56,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Gosec results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: 'gosec-results.sarif'
@@ -68,11 +72,14 @@ jobs:
           go-version: '1.26.3'
 
       - name: Install license checker
-        run: go install github.com/google/licenseclassifier/v2@latest
+        run: |
+          go install github.com/google/licenseclassifier/v2@v2.0.0
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
       - name: Check licenses
         run: |
           go mod download
-          go list -m all | while read line; do
+          licenseclassifier version
+          go list -m all | while read -r line; do
             echo "Checking: $line"
           done
